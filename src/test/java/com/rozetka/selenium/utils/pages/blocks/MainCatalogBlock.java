@@ -13,7 +13,7 @@ import static org.awaitility.Awaitility.await;
 @FindBy(id = "m-main-ul")
 public class MainCatalogBlock extends HtmlElement {
 
-    @FindBy(xpath = ".//li[@id='3361']")
+    @FindBy(xpath = ".//li[@id='3361']/a")
     private Button smartTvElectronicButton;
 
     public void clickSmartTvElectronicButton() {
