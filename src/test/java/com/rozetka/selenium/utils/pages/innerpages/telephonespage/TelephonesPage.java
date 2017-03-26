@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 public class TelephonesPage extends Page {
 
     private TelephoneCategoriesBlock telephoneCategoriesBlock;
+    private By allItemsOnPage = By.xpath(".//div[@class='g-i-tile-i-box']");
 
     public TelephonesPage(WebDriver driver) {
         super(driver, "/telefony/c4627900/");
@@ -26,6 +26,7 @@ public class TelephonesPage extends Page {
     }
 
     public List<Device> getTopSoldDevices() {
+        driverWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(allItemsOnPage));
         return getTopSoldItems().stream().map(Device::new).collect(Collectors.toList());
     }
 
@@ -36,12 +37,12 @@ public class TelephonesPage extends Page {
         driver.findElement(sortDropDown).click();
         driverWait.until(ExpectedConditions.elementToBeClickable(popularChose));
         driver.findElement(popularChose).click();
+        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(popularChose));
     }
 
     private List<WebElement> getTopSoldItems() {
-        By allItems = By.xpath(".//div[@class='g-i-tile-i-box']");
-        By topSoldItems = By.xpath(".//i[@class='g-tag g-tag-icon-middle-popularity sprite']/../..");
-        driverWait.until(ExpectedConditions.elementToBeClickable(allItems));
+        By topSoldItems = By.xpath(".//i[@class='g-tag g-tag-icon-middle-popularity sprite']/../../..");
+        driverWait.until(ExpectedConditions.presenceOfElementLocated(allItemsOnPage));
         return driver.findElements(topSoldItems);
     }
 }

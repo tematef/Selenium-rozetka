@@ -16,11 +16,11 @@ public class Device {
 
     public Device(WebElement webElement) {
         this.name = webElement.
-                findElement(By.xpath("../div[@class='g-i-tile-i-title clearfix']/a")).
+                findElement(By.xpath("./div[@class='g-i-tile-i-title clearfix']/a")).
                 getText().
                 trim();
         this.price = Integer.valueOf(webElement.
-                findElement(By.xpath("../div[@class='inline']/div/div[@name='price']/div")).
+                findElement(By.xpath("./div[@class='inline']/div/div[@name='price']/div")).
                 getText().
                 replaceAll("[^0-9]", ""));
     }
@@ -53,8 +53,7 @@ public class Device {
 
         Device device = (Device) o;
 
-        if (price != device.price) return false;
-        return name.equals(device.name);
+        return price == device.price && name.equals(device.name);
 
     }
 

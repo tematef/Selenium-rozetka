@@ -5,7 +5,6 @@ import com.rozetka.selenium.utils.pages.Page;
 import com.rozetka.selenium.utils.pages.innerpages.telephonespage.TelephonesPage;
 import org.openqa.selenium.WebDriver;
 
-
 /**
  * Created by artem on 3/24/17.
  */

@@ -1,17 +1,14 @@
 package com.rozetka.selenium.tests;
 
-import com.rozetka.selenium.utils.BasicTestCase;
 import com.rozetka.selenium.utils.SeleniumProperties;
-import com.rozetka.selenium.utils.db.MySqlDb;
+import com.rozetka.selenium.utils.db.DbActions;
 import com.rozetka.selenium.utils.objects.Device;
 import com.rozetka.selenium.utils.pages.MainPage;
 import com.rozetka.selenium.utils.pages.innerpages.smarttvelectronicpage.SmartTvElectronicPage;
 import com.rozetka.selenium.utils.pages.innerpages.telephonespage.TelephonesPage;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +18,10 @@ import static com.rozetka.selenium.utils.Email.sendEmailReport;
 /**
  * Created by artem on 3/24/17.
  */
-public class TestGetDeviceNames extends BasicTestCase {
+public class TestGetDeviceNames extends DbActions {
 
     private List<Device> topSoldDevices = new ArrayList<>();
-    private MySqlDb db;
     private String emailSendToReport = SeleniumProperties.getProperty("report.email");
-
-    @BeforeClass
-    private void establishDbConnection() {
-        db = new MySqlDb();
-    }
 
     @Test
     public void testGetAndStoreToDbTopSoldDevices() throws SQLException {
@@ -39,54 +30,17 @@ public class TestGetDeviceNames extends BasicTestCase {
         TelephonesPage telephonesPage = smartTvElectronicPage.clickTelephonesButton();
         telephonesPage.clickSmartPhonesButton();
         telephonesPage.sortItemsByPopularity();
-
         topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
-//        telephonesPage.paginationBlock.openNextPage();
-//        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
-//        telephonesPage.paginationBlock.openNextPage();
-//        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
+        telephonesPage.openNextPage();
+        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
+        telephonesPage.openNextPage();
+        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
         saveDevicesToDb(topSoldDevices);
-
         sendEmailReport(emailSendToReport, generateReport());
     }
 
-    @AfterClass(alwaysRun = true)
-    private void closeDbConnection() {
-        db.closeDbConnection();
-    }
-
-    private void saveDevicesToDb(List<Device> devices) throws SQLException {
-        for (Device device: devices) {
-            if (!checkIfDeviceAlreadyStored(device)) {
-                db.executeQueryUpdate(String.format("Insert into TopSales(name, price) values ('%s', %s);",
-                        device.getName(), device.getPrice()));
-            }
-        }
-    }
-
-    private boolean checkIfDeviceAlreadyStored(Device device) throws SQLException {
-        return db.executeCustomQueryOneResult(
-                String.format("Select count(*) from TopSales where name = '%s' and price = %s;",
-                        device.getName(), device.getPrice())).equals("1");
-    }
-
-    private String generateReport() throws SQLException {
-        StringBuilder report = new StringBuilder();
-        for (Device device: getTopSoldDevicesFromDb()) {
-            report.append(device.getName()).append(" ").append(device.getPrice()).append("grn \n");
-        }
-        if (report.length() == 0) {
-            return report.append("No devices were found").toString();
-        }
-        return report.toString();
-    }
-
-    private List<Device> getTopSoldDevicesFromDb() throws SQLException {
-        ResultSet set = db.executeQuery("Select * from TopSales;");
-        List<Device> devices = new ArrayList<>();
-        while (set.next()) {
-            devices.add(new Device(set));
-        }
-        return devices;
+    @AfterMethod(alwaysRun = true)
+    private void cleaningDB() throws SQLException {
+        removeTestingDataFromDb();
     }
 }

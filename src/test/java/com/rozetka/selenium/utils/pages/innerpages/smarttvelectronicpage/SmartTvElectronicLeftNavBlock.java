@@ -17,7 +17,7 @@ public class SmartTvElectronicLeftNavBlock extends HtmlElement {
     @FindBy(xpath = ".//a[text()='Телефоны']")
     private Button telephonesButton;
 
-    public void clickTelephonesButton() {
+    void clickTelephonesButton() {
         await().until(() -> ExpectedConditions.elementToBeClickable(telephonesButton.getWrappedElement()));
         telephonesButton.click();
     }

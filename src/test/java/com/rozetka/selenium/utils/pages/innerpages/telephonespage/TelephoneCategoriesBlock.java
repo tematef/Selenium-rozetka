@@ -16,7 +16,7 @@ public class TelephoneCategoriesBlock extends HtmlElement {
     @FindBy(xpath = ".//a[text()='Смартфоны']")
     private Button smartPhonesButton;
 
-    public void clickSmartPhonesButton() {
+    void clickSmartPhonesButton() {
         await().until(() -> ExpectedConditions.elementToBeClickable(smartPhonesButton.getWrappedElement()));
         smartPhonesButton.click();
     }

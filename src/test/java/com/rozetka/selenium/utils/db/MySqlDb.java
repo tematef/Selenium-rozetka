@@ -9,9 +9,9 @@ import java.sql.*;
  */
 public class MySqlDb {
 
-    private Connection connection = null;
-    private Statement statement = null;
-    private ResultSet resultSet = null;
+    private Connection connection;
+    private Statement statement;
+    private ResultSet resultSet;
 
     public MySqlDb() {
         connection = getConnection();
@@ -53,13 +53,13 @@ public class MySqlDb {
 
     private Connection getConnection() {
         loadDataBaseDriver();
-        String host = SeleniumProperties.getProperty("mysql_host");
-        String username = SeleniumProperties.getProperty("mysql_user");
-        String password = SeleniumProperties.getProperty("mysql_password");
-        String database = SeleniumProperties.getProperty("mysql_database");
-        String port = SeleniumProperties.getProperty("mysql_port");
-        String defaulDbEncoding = "UTF-8";
-        String url = String.format("jdbc:mysql://%s:%s/%s?characterEncoding=%s", host, port, database, defaulDbEncoding);
+        String host = SeleniumProperties.getProperty("mysql.host");
+        String username = SeleniumProperties.getProperty("mysql.user");
+        String password = SeleniumProperties.getProperty("mysql.password");
+        String database = SeleniumProperties.getProperty("mysql.database");
+        String port = SeleniumProperties.getProperty("mysql.port");
+        String defaultDbEncoding = "UTF-8";
+        String url = String.format("jdbc:mysql://%s:%s/%s?characterEncoding=%s", host, port, database, defaultDbEncoding);
         System.out.println("Connecting database...");
         try {
             connection = DriverManager.getConnection(url, username, password);

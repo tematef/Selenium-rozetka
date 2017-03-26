@@ -13,9 +13,9 @@ import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementDecorator;
  */
 public abstract class Page {
 
-    public PaginationBlock paginationBlock;
     protected WebDriver driver;
     protected WebDriverWait driverWait;
+    private PaginationBlock paginationBlock;
     private String pageUrl;
 
     public Page(WebDriver driver, String url) {
@@ -26,12 +26,14 @@ public abstract class Page {
         PageFactory.initElements(new HtmlElementDecorator(driver), this);
     }
 
-    public void refresh() {
-        driver.navigate().refresh();
+    public void openNextPage() {
+        paginationBlock.openNextPage(driverWait);
     }
-    public WebDriver getDriver() {
-        return driver;
+
+    public void openPreviousPage() {
+        paginationBlock.openPreviousPage(driverWait);
     }
+
     void open() {
         driver.get(this.pageUrl);
     }

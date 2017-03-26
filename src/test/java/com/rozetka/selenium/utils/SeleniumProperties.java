@@ -11,8 +11,7 @@ public class SeleniumProperties {
 
     private static Properties properties;
 
-    private SeleniumProperties() {
-    }
+    private SeleniumProperties() { }
 
     static {
         properties = new Properties();

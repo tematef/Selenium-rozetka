@@ -44,7 +44,7 @@ public class MainPage extends Page {
     }
 
     public SmartTvElectronicPage navigateToSmartTvElectronicPage() {
-        mainCatalogBlock.clickSmartTvElectronicButton();
+        mainCatalogBlock.clickSmartTvElectronicButton(driver);
         return new SmartTvElectronicPage(driver);
     }
 }
