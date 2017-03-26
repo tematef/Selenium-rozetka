@@ -1,9 +1,9 @@
 package com.rozetka.selenium.tests;
 
 import com.rozetka.selenium.utils.BasicTestCase;
+import com.rozetka.selenium.utils.db.MySqlDb;
 import com.rozetka.selenium.utils.objects.Device;
 import com.rozetka.selenium.utils.pages.MainPage;
-import com.rozetka.selenium.utils.pages.db.MySqlDb;
 import com.rozetka.selenium.utils.pages.innerpages.smarttvelectronicpage.SmartTvElectronicPage;
 import com.rozetka.selenium.utils.pages.innerpages.telephonespage.TelephonesPage;
 import org.testng.annotations.AfterClass;

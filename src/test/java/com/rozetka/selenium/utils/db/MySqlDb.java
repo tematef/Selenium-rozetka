@@ -1,4 +1,4 @@
-package com.rozetka.selenium.utils.pages.db;
+package com.rozetka.selenium.utils.db;
 
 import com.rozetka.selenium.utils.SeleniumProperties;
 

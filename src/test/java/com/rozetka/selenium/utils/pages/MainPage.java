@@ -13,9 +13,7 @@ import ru.yandex.qatools.htmlelements.element.TextBlock;
  */
 public class MainPage extends Page {
 
-    protected String titleText;
-
-    public MainCatalogBlock mainCatalogBlock;
+    private MainCatalogBlock mainCatalogBlock;
 
     @FindBy(xpath = ".//a[@href='/']")
     private Link logoLink;
