@@ -3,6 +3,9 @@ package com.rozetka.selenium.utils.objects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Created by artem on 3/24/17.
  */
@@ -20,6 +23,11 @@ public class Device {
                 findElement(By.xpath("../div[@class='inline']/div/div[@name='price']/div")).
                 getText().
                 replaceAll("[^0-9]", ""));
+    }
+
+    public Device(ResultSet row) throws SQLException {
+        this.name = row.getString("name");
+        this.price = row.getInt("price");
     }
 
     public String getName() {
