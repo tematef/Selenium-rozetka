@@ -1,6 +1,7 @@
 package com.rozetka.selenium.tests;
 
 import com.rozetka.selenium.utils.BasicTestCase;
+import com.rozetka.selenium.utils.SeleniumProperties;
 import com.rozetka.selenium.utils.db.MySqlDb;
 import com.rozetka.selenium.utils.objects.Device;
 import com.rozetka.selenium.utils.pages.MainPage;
@@ -10,9 +11,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.rozetka.selenium.utils.Email.sendEmailReport;
 
 /**
  * Created by artem on 3/24/17.
@@ -21,6 +25,7 @@ public class TestGetDeviceNames extends BasicTestCase {
 
     private List<Device> topSoldDevices = new ArrayList<>();
     private MySqlDb db;
+    private String emailSendToReport = SeleniumProperties.getProperty("report.email");
 
     @BeforeClass
     private void establishDbConnection() {
@@ -36,11 +41,13 @@ public class TestGetDeviceNames extends BasicTestCase {
         telephonesPage.sortItemsByPopularity();
 
         topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
-        telephonesPage.paginationBlock.openNextPage();
-        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
-        telephonesPage.paginationBlock.openNextPage();
-        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
+//        telephonesPage.paginationBlock.openNextPage();
+//        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
+//        telephonesPage.paginationBlock.openNextPage();
+//        topSoldDevices.addAll(telephonesPage.getTopSoldDevices());
         saveDevicesToDb(topSoldDevices);
+
+        sendEmailReport(emailSendToReport, generateReport());
     }
 
     @AfterClass(alwaysRun = true)
@@ -61,5 +68,25 @@ public class TestGetDeviceNames extends BasicTestCase {
         return db.executeCustomQueryOneResult(
                 String.format("Select count(*) from TopSales where name = '%s' and price = %s;",
                         device.getName(), device.getPrice())).equals("1");
+    }
+
+    private String generateReport() throws SQLException {
+        StringBuilder report = new StringBuilder();
+        for (Device device: getTopSoldDevicesFromDb()) {
+            report.append(device.getName()).append(" ").append(device.getPrice()).append("grn \n");
+        }
+        if (report.length() == 0) {
+            return report.append("No devices were found").toString();
+        }
+        return report.toString();
+    }
+
+    private List<Device> getTopSoldDevicesFromDb() throws SQLException {
+        ResultSet set = db.executeQuery("Select * from TopSales;");
+        List<Device> devices = new ArrayList<>();
+        while (set.next()) {
+            devices.add(new Device(set));
+        }
+        return devices;
     }
 }
