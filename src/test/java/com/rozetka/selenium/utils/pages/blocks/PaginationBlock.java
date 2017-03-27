@@ -34,8 +34,6 @@ public class PaginationBlock extends HtmlElement {
     }
 
     private int getCurrentPage(WebDriverWait driverWait) {
-//        driverWait.until(ExpectedConditions.visibilityOf(activePagePaginatorBtn));
-//        driverWait.until(ExpectedConditions.visibilityOf(activePagePaginatorBtn));
         return Integer.valueOf( driverWait.until(ExpectedConditions.visibilityOf(activePagePaginatorBtn))
         .getAttribute("ID").replaceAll("[^0-9]", ""));
     }
